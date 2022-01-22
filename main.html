@@ -1,0 +1,366 @@
+<!doctype HTML>
+<link href='https://fonts.googleapis.com/css?family=Archivo' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+<html>
+    <title> Codon Decoder</title>
+    <body>
+    <style>
+        .all
+        {
+            font-size: 16px;
+            font-family: "Archivo";
+            color: black;
+        }
+        #error
+        {
+            color: red;
+        }
+        #textfield
+        {
+            font-family: "Archivo";
+            font-size: 16px;
+            border-radius: 3px;
+            width: 250px;
+            height: 25px;
+        }
+        #convert
+        {
+            font-family: "Archivo";
+            color: Seashell;
+            font-size: 16px;
+            border-radius: 4px;
+            width: 100px;
+            height: 26px;
+            background-color: dodgerblue;
+            border-color: dodgerblue;
+            outline: blue;
+            text-align: center;
+        }
+        #header
+        {
+            text-align: center;
+        }
+        #dropdown
+        {
+            font-family: "Archivo";
+            font-size: 16px;
+            height: 30px;
+        }
+        .output
+        {
+            font-kerning: none;
+            font-family: "Fira Code";
+            font-size: 16px;
+        }
+    </style>
+
+    <div class = "all">
+        <h1 id = "header"> Codon Decoder </h1>
+
+         <p id = "intro"> Welcome to the Codon Decoder. Convert mRNA, tRNA, and DNA into their corresponding polypeptide.</p>
+
+        <select id = "dropdown">
+            <option value = "mRNA"> mRNA </option>
+            <option value = "tRNA"> tRNA </option>
+            <option value = "DNA" > DNA  </option>
+        </select>
+
+        <input id = "textfield" type = text placeholder = "Enter nucleotides">
+
+        <div class = "output">
+            <p> mRNA: <span id = "mRNA"></span> </p>
+            <p> tRNA: <span id = "tRNA"></span> </p>
+            <p> &nbspDNA:  <span id = "DNA"></span> </p>
+        </div>
+            <p> Amino Acid sequence<span class="output">:</span> <span id = "aa"></span> </p>
+
+        <button onclick = "convert()" type = "button" id="convert"> Convert </button>
+
+        <p id = "error"></p>
+     </div>
+
+    <script>
+        function DNAtomRNA(DNA)
+        {
+            var mRNA = "";
+
+            let i;
+            for (i = 0; i < DNA.length; i++)
+            {
+                if (DNA[i] == 'A')
+                    mRNA += "U";
+                else if (DNA[i] == 'T')
+                    mRNA += "A";
+                else if (DNA[i] == 'C')
+                    mRNA += "G";
+                else if (DNA[i] == 'G')
+                    mRNA += "C";
+            }
+            return mRNA;
+        }
+        function tRNAtomRNA(tRNA)
+        {
+            var mRNA = "";
+
+            let i;
+            for (i = 0; i < tRNA.length; i++)
+            {
+                if (tRNA[i] == 'A')
+                    mRNA += "U";
+                else if (tRNA[i] == 'U')
+                    mRNA += "A";
+                else if (tRNA[i] == 'C')
+                    mRNA += "G";
+                else if (tRNA[i] == 'G')
+                    mRNA += "C";
+            }
+            return mRNA;
+        }
+
+        function mRNAtoDNA(mRNA)
+        {
+            var DNA = "";
+
+            let i;
+            for (i = 0; i < mRNA.length; i++)
+            {
+                if (mRNA[i] == 'U')
+                    DNA += "A";
+                else if (mRNA[i] == 'A')
+                    DNA += "T";
+                else if (mRNA[i] == 'G')
+                    DNA += "C";
+                else if (mRNA[i] == 'C')
+                    DNA += "G";
+            }
+            return DNA;
+        }
+        function mRNAtotRNA(mRNA)
+        {
+            var tRNA = "";
+            let i;
+            for ( i = 0; i < mRNA.length; i++)
+            {
+                if (mRNA[i] == 'U')
+                    tRNA += "A";
+                else if (mRNA[i] == 'A')
+                    tRNA += "U";
+                else if (mRNA[i] == 'G')
+                    tRNA += "C";
+                else if (mRNA[i] == 'C')
+                    tRNA += "G";
+            }
+            return tRNA;
+        }
+
+        function CodonToAminoAcid(Codon)
+        {
+            if (Codon[0] == 'A')
+            {
+                if (Codon[1]== 'A')
+                {
+                    if (Codon[2] == 'A' || Codon[2] == 'G')
+                        return "Lys";
+                    else
+                        return "Asn";
+                }
+                else if (Codon[1] == 'U')
+                {
+                    if (Codon[2] == 'G')
+                        return "Met";
+                    else
+                        return "Ile";
+                }
+                else if (Codon[1] == 'C')
+                {
+                    return "Thr";
+                }
+                else if (Codon[1] == 'G')
+                {
+                    if (Codon[2] == 'A' || Codon[2] == 'G')
+                        return "Arg";
+                    else
+                        return "Ser";
+                }
+            }
+            else if (Codon[0] == 'U')
+            {
+                if (Codon[1] == 'A')
+                {
+                    if (Codon[2] == 'U' || Codon[2] == 'C')
+                        return "Tyr";
+                    else
+                        return "Stop";
+                }
+                else if (Codon[1] == 'U')
+                {
+                    if (Codon[2] == 'U' || Codon[2] == 'C')
+                        return "Phe";
+                    else
+                        return "Leu";
+                }
+                else if (Codon[1] == 'C')
+                {
+                    return "Ser";
+                }
+                else if (Codon[1] == 'G')
+                {
+                    if (Codon[2] == 'U' || Codon[2] == 'C')
+                        return "Cys";
+                    else if (Codon[2] == 'A')
+                        return "Stop";
+                    else
+                        return "Trp";
+                }
+            }
+            else if (Codon[0] == 'C')
+            {
+                if (Codon[1] == 'A')
+                {
+                    if (Codon[2] == 'U' || Codon[2] == 'C')
+                        return "His";
+                    else
+                        return "Gln";
+                }
+                else if (Codon[1] == 'U')
+                {
+                    return "Leu";
+                }
+                else if (Codon[1] == 'C')
+                {
+                    return "Pro";
+                }
+                else if (Codon[1] == 'G')
+                {
+                    return "Arg";
+                }
+            }
+            else if (Codon[0] == 'G')
+            {
+                if (Codon[1] == 'A')
+                {
+                    if (Codon[2] == 'U' || Codon[2] == 'C')
+                        return "Asp";
+                    else
+                        return "Glu";
+                }
+                else if (Codon[1] == 'U')
+                {
+                    return "Val";
+                }
+                else if (Codon[1] == 'C')
+                {
+                    return "Ala";
+                }
+                else if (Codon[1] == 'G')
+                {
+                    return "Gly";
+                }
+            }
+            else
+            {
+                return "Error";
+            }
+        }
+        function mRNADecoder(mRNA)
+        {
+            var polyPeptide = "";
+
+            while (mRNA.length % 3 != 0)
+                mRNA = mRNA.substring(0, mRNA.length - 1);
+
+            let i;
+            for (i = 0; i < mRNA.length / 3; i++)
+            {
+                polyPeptide += CodonToAminoAcid(mRNA.substr(3 * i, 3)) + "-";
+            }
+
+            return polyPeptide.substring(0, polyPeptide.length - 1);
+        }
+
+        function clear()
+        {
+            document.getElementById("error").innerText = "";
+            document.getElementById("mRNA").innerText = "";
+            document.getElementById("tRNA").innerText = "";
+            document.getElementById("DNA").innerText = "";
+            document.getElementById("aa").innerText = "";
+        }
+        function checkCompliance(nucleotide, isRNA)
+        {
+            var complied = true;
+            let i;
+            for (i = 0; i < nucleotide.length; i++)
+            {
+                if((isRNA && nucleotide[i] != "A" && nucleotide[i] != "U" &&
+                    nucleotide[i] != "C" && nucleotide[i] != "G") || (!isRNA && nucleotide[i] != "A"
+                    && nucleotide[i] != "T" && nucleotide[i] != "C" && nucleotide[i] != "G"))
+                {
+                    document.getElementById("error").innerText = "Error: Invalid character(s)";
+                    complied = false;
+                    break;
+                }
+            }
+
+            return complied;
+        }
+        function convert()
+        {
+            clear();
+
+            var dropDown = document.getElementById("dropdown");
+            var inputType = dropDown.value;
+            var nucleotide = document.getElementById("textfield").value;
+
+            nucleotide = nucleotide.toUpperCase();
+            nucleotide = nucleotide.replace(/ /g,"");
+            nucleotide = nucleotide.replace(/-/g, "");
+
+            var mRNA = "";
+            var tRNA = "";
+            var DNA = "";
+            var aminoAcid = "";
+
+            if(inputType == "mRNA")
+            {
+                mRNA = nucleotide;
+                tRNA = mRNAtotRNA(mRNA);
+                DNA = mRNAtoDNA(mRNA);
+            }
+            else if(inputType == "tRNA")
+            {
+                tRNA = nucleotide;
+                mRNA = tRNAtomRNA(tRNA);
+                DNA = mRNAtoDNA(mRNA);
+            }
+            else if (inputType == "DNA")
+            {
+                DNA = nucleotide;
+                mRNA = DNAtomRNA(DNA);
+                tRNA = mRNAtotRNA(mRNA);
+            }
+            aminoAcid = mRNADecoder(mRNA);
+
+            var compliance;
+            if(inputType == "DNA")
+                compliance = checkCompliance(nucleotide, false);
+            else
+                compliance = checkCompliance(nucleotide, true);
+
+            if(compliance)
+            {
+                document.getElementById("mRNA").innerText
+                    = document.getElementById("mRNA").textContent = mRNA;
+                document.getElementById("tRNA").innerText
+                    = document.getElementById("tRNA").textContent = tRNA;
+                document.getElementById("DNA").innerText
+                    = document.getElementById("DNA").textContent = DNA;
+                document.getElementById("aa").innerText
+                    = document.getElementById("aa").textContent =aminoAcid;
+            }
+        }
+    </script>
+
+    </body>
+</html>
